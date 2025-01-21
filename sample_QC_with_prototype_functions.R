@@ -650,12 +650,12 @@ incident.data.dict <- box_read(869084480019) %>%
 
 # Reading core data
 # put the name of the data Box file ID inside the quotation marks
-core.data <- box_read("")
+core.data <- box_read("1585359896873")
 
 
 # Reading incident data
 # put the name of the data Box file ID inside the quotation marks
-incident.data <- box_read("")
+incident.data <- box_read("1585348629459")
 
 # lastfup is created in core data 
 # if lastfup is present in core data
@@ -671,8 +671,19 @@ if(!"lastfup" %in% names(core.data)){
 # reading correction rules from Box
 bcrpp.core.correction.rules <- box_read(996117218706)
 
+bcrpp.core.correction.rules <- subset(bcrpp.core.correction.rules, bcrpp.core.correction.rules$type!= "cross_range2.changes")
+bcrpp.core.correction.rules <- subset(bcrpp.core.correction.rules, bcrpp.core.correction.rules$type!= "crossvalid2.changes")
+
+
 # reading warning rules from Box
 bcrpp.core.warning.rules <- box_read(996103073482)
+
+
+bcrpp.core.warning.rules <- subset(bcrpp.core.warning.rules, bcrpp.core.warning.rules$`QC Type`!= "crossvalid1.warnings")
+bcrpp.core.warning.rules <- subset(bcrpp.core.warning.rules, bcrpp.core.warning.rules$`QC Type`!= "crossrange2.warnings")
+bcrpp.core.warning.rules <- subset(bcrpp.core.warning.rules, bcrpp.core.warning.rules$`QC Type`!= "crossvalid3.warnings")
+bcrpp.core.warning.rules <- subset(bcrpp.core.warning.rules, bcrpp.core.warning.rules$`QC Type`!= "crossvalid2.warnings")
+
 
 
 # apply bcrpp correction rules to data 
@@ -682,12 +693,13 @@ core.data.changes <- changes_qc(rules = bcrpp.core.correction.rules,
 
 # applying warning rules to data that already has changes made to core data
 core.data.qc <- warnings_qc(params =bcrpp.core.warning.rules,
-                            data = core.data.changes)
+                            data = core.data)
 
-# MAKING REPORT 
+c # MAKING REPORT 
 
 # Populate "study_name" with name of Study
-core_summary_report(core.dict = core.data.dict, qc_df = core.data.qc, path_output = path_to_output, study_name = "")
+core_summary_report(core.dict = core.data.dict, qc_df = core.data.qc, path_output =  "C:/Users/ahearntu/Box/TBD_QC", study_name = "PLCO_QC_testing")
+
 
 
 #### INCIDENT BREAST CANCER CASES
