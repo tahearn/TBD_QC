@@ -322,6 +322,172 @@ valid.changes <- function(data,params){
 }
 
 
+crossvalid1.changes <- function(data,params){
+  # Similar function to valid.
+  # Corrects 777 and 888 values according to cross variables.
+  # data: The data frame where the data is to be changed
+  # params: The data frame of the rules which are being used to change the data
+  
+  
+  print('====> in crossvalid1.changes')
+  if (!(params$variable)  %in% names(data) | !(params$cross_variable_1 %in% names(data))) {
+    print(glue(' {params$Variable} not present in data set, skipping this QC step'))
+    return (data)
+  } else {
+    # creating symbol for variable
+    variable_symbol = sym(params$variable)
+    # creating symbol for first cross variable
+    crossvar1_symbol = sym(params$cross_variable_1)
+    #creating symbol for comment corresponding to variable
+    comment1 <- paste0(variable_symbol, '.data.change')
+    # mutate is used to add the change 777 and 888 values associated with the variable and leave a comment 
+    data <- data %>% mutate( !!comment1 := ifelse( !!variable_symbol %in% get_range_values(params$value_changed) & !!crossvar1_symbol %in% get_range_values(params$cross_variable_1_value),
+                                                   params$comment,
+                                                   data[[comment1]]),
+                             !!variable_symbol := ifelse( !!variable_symbol %in% get_range_values(params$value_changed) & !!crossvar1_symbol %in% get_range_values(params$cross_variable_1_value),
+                                                          as.numeric(params$new_value),
+                                                          !!variable_symbol) )
+    return (data)
+  }
+}
+
+
+
+crossvalid2.changes <- function(data,params){
+  # Corrects 777 and 888 values using three cross variables.
+  # data: The data frame where the data is to be changed
+  # params: The data frame of the rules which are being used to change the data
+  
+  # Returns data frame with the 777 and 888 values  changed and corresponding comments added
+  print('=====> in crossvalid2.changes')
+  #Corrects 777 and 888 values for three cross variables.
+  if (!(params$variable)  %in% names(data) | !(params$cross_variable_1) %in% names(data) | !(params$cross_variable_2) %in% names(data)) {
+    print(glue(' {params$Variable} not present in data set, skipping this QC step'))
+    return (data)
+  } else{
+    #creates smbol for variable  
+    variable_symbol = sym(params$variable)
+    # symbol for first cross variable
+    crossvar1_symbol = sym(params$cross_variable_1)
+    # symbol for second cross variable
+    crossvar2_symbol = sym(params$cross_variable_2)
+    
+    
+    # symbol created for the comment
+    comment1 <- paste0(variable_symbol, '.data.change')
+    # mutate adds comment about change to be made based on 
+    #conditions listed by the rules
+    data <- data %>% mutate( !!comment1 := ifelse( !!variable_symbol %in% get_range_values(params$value_changed) & !!crossvar1_symbol %in% get_range_values(params$cross_variable_1_value)
+                                                   & !!crossvar2_symbol %in% get_range_values(params$cross_variable_2_value),
+                                                   params$comment,
+                                                   data[[comment1]]),
+                             # mutate changes 777 and 888 values for the variable based on
+                             #conditions listed by the rules
+                             !!variable_symbol := ifelse( !!variable_symbol %in% get_range_values(params$value_changed) & !!crossvar1_symbol %in% get_range_values(params$cross_variable_1_value)
+                                                          & !!crossvar2_symbol %in% get_range_values(params$cross_variable_2_value),
+                                                          as.numeric(params$new_value),
+                                                          !!variable_symbol)
+    )
+    return(data)
+  }
+}
+
+
+
+
+crossvalid3.changes <- function(data,params){
+  # Corrects 777 and 888 values using three cross variables.
+  # data: The data frame where the data is to be changed
+  # params: The data frame of the rules which are being used to change the data
+  
+  # Returns data frame with the 777 and 888 values  changed and corresponding comments added
+  print('====> in crossvalid3.changes')
+  #Corrects 777 and 888 values for three cross variables.
+  if (!(params$variable)  %in% names(data) | !(params$cross_variable_1) %in% names(data) | !(params$cross_variable_2) %in% names(data)
+      | !(params$cross_variable_3) %in% names(data)) {
+    print(glue(' {params$Variable} not present in data set, skipping this QC step'))
+    return (data)
+  } else {
+    #creates smbol for variable  
+    variable_symbol = sym(params$variable)
+    # symbol for first cross variable
+    crossvar1_symbol = sym(params$cross_variable_1)
+    # symbol for second cross variable
+    crossvar2_symbol = sym(params$cross_variable_2)
+    
+    # symbol for third cross variable
+    crossvar3_symbol = sym(params$cross_variable_3)
+    # symbol created for the comment
+    comment1 <- paste0(variable_symbol, '.data.change')
+    # mutate adds comment about change to be made based on 
+    #conditions listed by the rules
+    data <- data %>% mutate( !!comment1 := ifelse( !!variable_symbol %in% get_range_values(params$value_changed) 
+                                                   & !!crossvar1_symbol %in% get_range_values(params$cross_variable_1_value)
+                                                   & !!crossvar2_symbol %in% get_range_values(params$cross_variable_2_value)
+                                                   & !!crossvar3_symbol %in% get_range_values(params$cross_variable_3_value),
+                                                   params$comment,
+                                                   data[[comment1]]),
+                             # mutate changes 777 and 888 values for the variable based on
+                             #conditions listed by the rules
+                             !!variable_symbol := ifelse( !!variable_symbol %in% get_range_values(params$value_changed) 
+                                                          & !!crossvar1_symbol %in% get_range_values(params$cross_variable_1_value)
+                                                          & !!crossvar2_symbol %in% get_range_values(params$cross_variable_2_value)
+                                                          & !!crossvar3_symbol %in% get_range_values(params$cross_variable_3_value),
+                                                          as.numeric(params$new_value),
+                                                          !!variable_symbol)
+    )
+    return(data)
+  }
+}
+
+
+crossvalid4.changes <- function(data,params){
+  # Correction for 777 and 888 values for four cross variables.
+  # data: The data frame where the data is to be changed
+  # params: The data frame of the rules which are being used to change the data
+  # Returns data frame with the 777 and 888 values  changed and corresponding comments added
+  
+  print('======> in crossvalid4.changes')
+  if (!(params$variable)  %in% names(data) | !(params$cross_variable_1) %in% names(data) | !(params$cross_variable_2) %in% names(data)
+      | !(params$cross_variable_3) %in% names(data) | !(params$cross_variable_4) %in% names(data) ) {
+    print(glue(' {params$Variable} not present in data set, skipping this QC step'))
+    return (data)
+  } else {
+    # create symbol for the variable
+    variable_symbol = sym(params$variable)
+    # create symbol for first cross variable
+    crossvar1_symbol = sym(params$cross_variable_1)
+    # create sumbol for second cross variable
+    crossvar2_symbol = sym(params$cross_variable_2)
+    # create symbol for third cross variable
+    crossvar3_symbol = sym(params$cross_variable_3)
+    # create symbol for fourth cross variable
+    crossvar4_symbol = sym(params$cross_variable_4)
+    # create symbol for the comment column
+    comment1 <- paste0(variable_symbol, '.data.change')
+    # mutate adds comment about change to be made based on 
+    # conditions listed by the rules
+    data <- data %>% mutate( !!comment1 := ifelse( !!variable_symbol %in% get_range_values(params$value_changed) & !!crossvar1_symbol %in% get_range_values(params$cross_variable_1_value)
+                                                   & !!crossvar2_symbol %in% get_range_values(params$cross_variable_2_value)
+                                                   & !!crossvar3_symbol %in% get_range_values(params$cross_variable_3_value)
+                                                   & !!crossvar4_symbol %in% get_range_values(params$cross_variable_4_value),
+                                                   params$comment,
+                                                   data[[comment1]]),
+                             # mutate changes 777 and 888 values for the variable based on
+                             #conditions listed by the rules
+                             !!variable_symbol := ifelse( !!variable_symbol %in% get_range_values(params$value_changed) & !!crossvar1_symbol %in% get_range_values(params$cross_variable_1_value)
+                                                          & !!crossvar2_symbol %in% get_range_values(params$cross_variable_2_value)
+                                                          & !!crossvar3_symbol %in% get_range_values(params$cross_variable_3_value)
+                                                          & !!crossvar4_symbol %in% get_range_values(params$cross_variable_4_value),
+                                                          as.numeric(params$new_value),
+                                                          !!variable_symbol)
+    )
+    return(data)
+  }
+}
+
+
+
 range.changes <- function(data, params){
   # data: The data frame where the data is to be changed
   # params: The data frame of the rules which are being used to change the data
@@ -378,6 +544,88 @@ cross_range1.changes <- function(data, params){
   
 }
 
+cross_range2.changes <- function(data, params){
+  # data: The data frame where the data is to be changed
+  # params: The data frame of the rules which are being used to change the data
+  
+  # Returns data: The data frame with variable values changed according to rules with corresponding comment columns mentioning the change
+  print('====> in cross_range2.changes')
+  if (!(params$variable)  %in% names(data) | !(params$cross_variable_1) %in% names(data) | !(params$cross_variable_2) %in% names(data)) {
+    print(glue(' {params$variable} not present in data set, skipping this QC step'))
+    return (data)
+  } else{
+    
+    #converting variable name to symbol
+    variable_symbol <- sym(params$variable)
+    # create symbol for first cross variable
+    crossvar1_symbol = sym(params$cross_variable_1)
+    # create symbol for second cross variable
+    crossvar2_symbol = sym(params$cross_variable_2)
+    message("variable: ", params$variable, " cross variable 1: ", params$cross_variable_1, " cross variable 2: ", params$cross_variable_2 )
+    # creating a comment name
+    comment1 <- paste0(variable_symbol, '.data.change')
+    # using the variable symbol and comment to change the data and leave a comment
+    data <- data %>% mutate(!!comment1 := ifelse(!!parse_expr(params$value_changed)
+                                                 & !!parse_expr(params$cross_variable_1_value)
+                                                 & !! parse_expr(params$cross_variable_2_value),
+                                                 # ifelse(nchar(comment)==0,
+                                                 #          params$comment,
+                                                 #         paste0(comment, " | ", params$comment)),
+                                                 params$comment,
+                                                 data[[comment1]]),
+                            !!variable_symbol := ifelse(!!parse_expr(params$value_changed)
+                                                        & !!parse_expr(params$cross_variable_1_value)
+                                                        & !! parse_expr(params$cross_variable_2_value),
+                                                        eval(rlang::parse_expr(as.character(params$new_value))),
+                                                        !!variable_symbol)
+    )
+    return(data)
+  }
+}
+
+
+cross_range3.changes <- function(data, params){
+  # data: The data frame where the data is to be changed
+  # params: The data frame of the rules which are being used to change the data
+  
+  # Returns data: The data frame with variable values changed according to rules with corresponding comment columns mentioning the change
+  print('====> in cross_range3.changes')
+  if (!(params$variable)  %in% names(data) | !(params$cross_variable_1) %in% names(data) | !(params$cross_variable_2) %in% names(data)|
+      !(params$cross_variable_3) %in% names(data)) {
+    print(glue(' {params$variable} or {params$cross_variable_1} or {params$cross_variable_2} or {params$cross_variable_3} not present in data set, skipping this QC step'))
+    return (data)
+  } else{
+    
+    #converting variable name to symbol
+    variable_symbol <- sym(params$variable)
+    # create symbol for first cross variable
+    crossvar1_symbol = sym(params$cross_variable_1)
+    # create symbol for second cross variable
+    crossvar2_symbol = sym(params$cross_variable_2)
+    # create symbol for third cross variable
+    crossvar3_symbol = sym(params$cross_variable_3)
+    # creating a comment name
+    comment1 <- paste0(variable_symbol, '.data.change')
+    # using the variable symbol and comment to change the data and leave a comment
+    data <- data %>% mutate(!!comment1 := ifelse(!!parse_expr(params$value_changed)
+                                                 & !!parse_expr(params$cross_variable_1_value)
+                                                 & !! parse_expr(params$cross_variable_2_value)
+                                                 & !! parse_expr(params$cross_variable_3_value),
+                                                 # ifelse(nchar(comment)==0,
+                                                 #          params$comment,
+                                                 #         paste0(comment, " | ", params$comment)),
+                                                 params$comment,
+                                                 data[[comment1]]),
+                            !!variable_symbol := ifelse(!!parse_expr(params$value_changed)
+                                                        & !!parse_expr(params$cross_variable_1_value)
+                                                        & !! parse_expr(params$cross_variable_2_value)
+                                                        & !! parse_expr(params$cross_variable_3_value),
+                                                        eval(rlang::parse_expr(as.character(params$new_value))),
+                                                        !!variable_symbol)
+    )
+    return(data)
+  }
+}
 
 
 
@@ -509,6 +757,138 @@ valid.warnings <- function(data,params){
   }
 }
 
+# QC function to catch inconsistencies related to another variable's value
+# for example, Parity has to be 0 if parous is 0
+
+crossvalid1.warnings <- function(data, params){
+  print('==========> in crossvalid1.warnings')
+  if (!params$Variable %in% names(data) | !params$`Cross Variable 1` %in% names(data)){
+    print(glue('{params$Variable} or {params$`Cross Variable 1`} not present in data set, skipping this QC step') )
+    return (data)
+  }
+  else {
+    
+    message("variable: ", params$`Variable`, " Cross Variable 1: ", params$`Cross Variable 1`) 
+    variable_symbol = sym(params$`Variable`)
+    crossvar1_symbol = sym(params$`Cross Variable 1`)
+    # creating symbol for the comment variable
+    comment_symbol = sym(params$Comment_Variable)
+    # creating comment column
+    comment2 = paste0(comment_symbol, '.data.warning')
+    
+    data <- data %>% 
+      mutate(!!comment2 := ifelse( !!variable_symbol  %in% get_range_values(params$`Valid Values`) 
+                                   & !(!!crossvar1_symbol) %in% get_range_values(params$`Cross Variable 1 Value`),
+                                   ifelse( is.na(data[[comment2]]),
+                                           params$Comments,
+                                           paste(data[[comment2]], ' | ', params$Comments) ), 
+                                   data[[comment2]]) )
+    return(data)
+  }
+}
+
+
+# QC function to catch inconsistencies related to two other values of variables
+crossvalid2.warnings <- function(data, params){
+  print('=========> in crossvalid2.warnings')
+  
+  if (!params$Variable %in% names(data) | !params$`Cross Variable 1` %in% names(data) | !params$`Cross Variable 2` %in% names(data)){
+    print(glue('{params$Variable} or cross variables not present in data set, skipping this QC step') )
+    return (data)
+  }
+  else{
+    message("variable: ", params$`Variable`, " Cross Variable 1: ", params$`Cross Variable 1`, " Cross Variable 2: ", params$`Cross Variable 2`) 
+    variable_symbol = sym(params$`Variable`)
+    crossvar1_symbol = sym(params$`Cross Variable 1`)
+    crossvar2_symbol = sym(params$`Cross Variable 2`)
+    # creating symbol for the comment variable
+    comment_symbol = sym(params$Comment_Variable)
+    # creating comment column
+    comment2 = paste0(comment_symbol, '.data.warning')
+    
+    data <- data %>%
+      mutate(!!comment2 := ifelse(!!variable_symbol %in% get_range_values(params$`Valid Values`) & !(!!crossvar1_symbol) %in% get_range_values(params$`Cross Variable 1 Value`)
+                                  |!!variable_symbol %in% get_range_values(params$`Valid Values`) &!(!!crossvar2_symbol) %in% get_range_values(params$`Cross Variable 2 Value`),
+                                  
+                                  ifelse(is.na(data[[comment2]]),
+                                         params$Comments,
+                                         paste(data[[comment2]], ' | ', params$Comments)), 
+                                  data[[comment2]]) )
+    return(data)
+  }
+}
+
+
+# QC function to catch inconsistencies related to three other values of variables
+crossvalid3.warnings <- function(data, params){
+  if (!params$Variable %in% names(data) | !params$`Cross Variable 1` %in% names(data) | !params$`Cross Variable 2` %in% names(data)
+      | !params$`Cross Variable 3` %in% names(data) ){
+    print(glue('{params$Variable} or cross variables not present in data set, skipping this QC step') )
+    return(data)
+  }
+  else{
+    print("===========> in crossvalid3.warnings")
+    message("variable: ", params$`Variable`, "Cross Variable 1: ", params$`Cross Variable 1`, "Cross Variable 2: ", params$`Cross Variable 2`, "Cross Variable 3: ", params$`Cross Variable 3`) 
+    variable_symbol = sym(params$`Variable`)
+    crossvar1_symbol = sym(params$`Cross Variable 1`)
+    crossvar2_symbol = sym(params$`Cross Variable 2`)
+    crossvar3_symbol = sym(params$`Cross Variable 3`)
+    # creating symbol for the comment variable
+    comment_symbol = sym(params$Comment_Variable)
+    # creating comment column
+    comment2 = paste0(comment_symbol, '.data.warning')
+    
+    data <- data  %>% 
+      mutate(!!comment2 := ifelse(  !!variable_symbol %in% get_range_values(params$`Valid Values`) & !(!!crossvar1_symbol) %in% get_range_values(params$`Cross Variable 1 Value`)
+                                    |!!variable_symbol %in% get_range_values(params$`Valid Values`) & !(!!crossvar2_symbol) %in% get_range_values(params$`Cross Variable 2 Value`)
+                                    |!!variable_symbol %in% get_range_values(params$`Valid Values`) & !(!!crossvar3_symbol) %in% get_range_values(params$`Cross Variable 3 Value`),
+                                    
+                                    ifelse(is.na(data[[comment2]]),
+                                           params$Comments,
+                                           paste(data[[comment2]], ' | ', params$Comments) ),
+                                    data[[comment2]] )  )
+    return(data)
+  }
+}
+
+
+
+# QC function to catch inconsistencies related to four other values of variables
+crossvalid4.warnings <- function(data, params){
+  print("===========> in crossvalid4.warnings")
+  if (!params$Variable %in% names(data) | !params$`Cross Variable 1` %in% names(data) | !params$`Cross Variable 2` %in% names(data)
+      | !params$`Cross Variable 3` %in% names(data) | !params$`Cross Variable 4` %in% names(data)){
+    print(glue('{params$Variable} or cross variables not present in data set, skipping this QC step') )
+    return(data)
+  }
+  else{
+    message("variable: ", params$`Variable`, "Cross Variable 1: ", params$`Cross Variable 1`, "Cross Variable 2: ", params$`Cross Variable 2`) 
+    variable_symbol = sym(params$`Variable`)
+    crossvar1_symbol = sym(params$`Cross Variable 1`)
+    crossvar2_symbol = sym(params$`Cross Variable 2`)
+    crossvar3_symbol = sym(params$`Cross Variable 3`)
+    crossvar4_symbol = sym(params$`Cross Variable 4`)
+    # creating symbol for the comment variable
+    comment_symbol = sym(params$Comment_Variable)
+    # creating comment column
+    comment2 = paste0(comment_symbol, '.data.warning')
+    
+    data <- data  %>% 
+      mutate(!!comment2 := ifelse(  !!variable_symbol %in% get_range_values(params$`Valid Values`) & !(!!crossvar1_symbol) %in% get_range_values(params$`Cross Variable 1 Value`)
+                                    |!!variable_symbol %in% get_range_values(params$`Valid Values`) & !(!!crossvar2_symbol) %in% get_range_values(params$`Cross Variable 2 Value`)
+                                    |!!variable_symbol %in% get_range_values(params$`Valid Values`) & !(!!crossvar3_symbol) %in% get_range_values(params$`Cross Variable 3 Value`)
+                                    |!!variable_symbol %in% get_range_values(params$`Valid Values`) & !(!!crossvar4_symbol) %in% get_range_values(params$`Cross Variable 4 Value`),
+                                    
+                                    ifelse(is.na(data[[comment2]]),
+                                           params$Comments,
+                                           paste(data[[comment2]], ' | ', params$Comments) ),
+                                    data[[comment2]] )  )
+    return(data)
+  }
+}
+
+
+
 
 
 crossrange.warnings <- function(data, params){
@@ -578,6 +958,64 @@ crossrange.warnings <- function(data, params){
   } # second main else function, everything is under here
   
 } #function close bracket
+
+
+crossrange2.warnings<- function(data, params){
+  
+  print('===========> in crossrange2.warnings')
+  if (!params$Variable %in% names(data) | !params$`Cross Variable 1` %in% names(data) | !params$`Cross Variable 2` %in% names(data)
+      | any(!get_range_values(params$`Formula_Variable`) %in% names(data)) ){
+    print(glue('Either {params$Variable}, cross variables or formula variables not present in data set, skipping this QC step') )
+    return (data)
+  } else{
+    message("variable: ", params$`Variable`, "Cross Variable: ", params$`Cross Variable 1`, "Cross Variable 2: ", params$`Cross Variable 2`) 
+    variable_symbol = sym(params$`Variable`)
+    crossvar1_symbol = sym(params$`Cross Variable 1`)
+    crossvar2_symbol = sym(params$`Cross Variable 2`)
+    # creating symbol for the comment variable
+    comment_symbol = sym(params$Comment_Variable)
+    # creating comment column
+    comment2 = sym(paste0(comment_symbol, '.data.warning') )
+    data <- data %>%
+      mutate(  formula_condition_fail = !(!!parse_expr(params$Formula_Condition)),
+               # NA values resulting from formula condition fail need to be set to FALSE
+               formula_condition_fail = if_else(is.na(formula_condition_fail), FALSE, formula_condition_fail),
+               cross_var_1_val_match = !!parse_expr(params$`Cross Variable 1 Value` ),
+               cross_var_1_val_match = ifelse(is.na(cross_var_1_val_match ), FALSE, cross_var_1_val_match ),
+               cross_var_2_val_match = !!parse_expr(params$`Cross Variable 2 Value` ),
+               cross_var_2_val_match = ifelse(is.na(cross_var_2_val_match), FALSE, cross_var_2_val_match),
+               !!comment2 := ifelse(cross_var_1_val_match & cross_var_2_val_match
+                                    & formula_condition_fail,
+                                    ifelse( is.na({{comment2}}), params$Comments, paste({{comment2}}, ' | ', params$Comments) ),
+                                    {{comment2}} ) )
+    
+    return(data %>% select(-c(formula_condition_fail, cross_var_1_val_match, cross_var_2_val_match )) )
+  }
+}
+
+value_check.warnings <- function(data, params){
+  
+  print('=======> in value_check.warnings')
+  if (!params$Variable %in% names(data) | !params$`Cross Variable 1` %in% names(data)){
+    print( glue('{params$Variable} or cross variables not present in data set, skipping this QC step') )
+    return (data)
+  } else {
+    variable_symbol = sym(params$`Variable`)
+    crossvar1_symbol = sym(params$`Cross Variable 1`)
+    # creating symbol for the comment variable
+    comment_symbol = sym(params$Comment_Variable)
+    # creating comment column
+    comment2 = paste0(comment_symbol, '.data.warning')
+    
+    data <- data %>% 
+      mutate( !!comment2 := ifelse( !(!!variable_symbol) %in% c(777,888)
+                                    & !!variable_symbol > crossvar1_symbol,
+                                    ifelse(is.na(data[[comment2]]),params$Comments, paste(data[[comment2]], ' | ', params$Comments)),
+                                    data[[comment2]] ) )
+    return(data)
+  }
+}
+
 
 
 
